@@ -1,4 +1,6 @@
-$fn=600;// Render 'scale'
+// Default config
+$fn=60;// Render 'scale'
+
 // Measurements assumed as mm
 
 // Internal measurement: bottom of 'leg' to top of arch (also called the loop).
@@ -12,7 +14,11 @@ LOOP_WIDTH=30;
 ////
 
 // Rounded or square profiled hook
-HOOK_TYPE="none";//[rounded,square,none]
+HOOK_TYPE="none"; //[rounded,square,none]
+// The search should return 0 (postiion in the vector with only HOOK_TYPE in it) 
+// if HOOK_TYPE matches one of the things in the list 
+
+
 // Internal measurement: gap between arch and hook lip. 5 for small hook, 21 for headset
 HOOK_DEPTH=21;//[1:40]
 // Internal measurement: height of hook lip above semi circle. 
@@ -56,6 +62,13 @@ HOLES_LOOP_LEG_CENTRAL_NUMBER=4;
 HOLES_LOOP_TOP_CENTRAL_NUMBER=2;
 
 
+// module assert_hook_type_set() {
+//    hook_type_options =["rounded", "square", "none"];
+//    a = len(search(0,search(hook_type_options, [HOOK_TYPE] )));
+//    echo(a);
+//    if (HOOK_TYPE == undef) echo("Please set HOOK_TYPE to one of: ", hook_type_options);
+//}
+
 hanger(
     PRINT_HEIGHT,
     PLA_WIDTH,
@@ -71,6 +84,9 @@ module hanger(
     hook_type, hook_depth, hook_height,
     holes, hole_radius, hole_loop_leg_central_number, holes_loop_top_central_number,
     nobble, nobble_radius, nobble_distance) {
+    
+    //config();
+    //assert_hook_type_set();
     if (hook_type == "rounded") {
         union(){
             loop(
@@ -234,7 +250,7 @@ module loop_subtractions(
                     cylinder(pla_width*2, hole_radius, center=true);
                 
                 // Holes for right leg
-                translate([pla_width*2 + width, y_measurement_side_hole*side_hole_number, PRINT_HEIGHT/2])
+                translate([pla_width*2 + width, y_measurement_side_hole*side_hole_number, print_height/2])
                     rotate([0,90,0])
                     cylinder(pla_width*2, hole_radius, center=true);
                 }};
@@ -245,7 +261,7 @@ module loop_subtractions(
          for (top_hole_number = [1: 1: holes_loop_top_central_number*2]) {
             if (top_hole_number %2 !=0) {
                 // Holes for top
-                translate([pla_width + x_measurement_top_hole*top_hole_number, pla_width +height, PRINT_HEIGHT/2])
+                translate([pla_width + x_measurement_top_hole*top_hole_number, pla_width +height, print_height/2])
                     rotate([90,0,0])
                     cylinder(pla_width*2, hole_radius, center=true);
                 }};               
