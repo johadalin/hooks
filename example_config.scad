@@ -5,12 +5,12 @@ $fn=600;// Render 'scale'
 // Measurements assumed as mm
 LOOP_HEIGHT=67;
 LOOP_WIDTH=30; 
-HOOK_TYPE="none";//[rounded,square,none]
-NOBBLE=false;//[true,false]
 
-HOLES=true;//[true,false]
+HOOK_TYPE="none";
+NOBBLE=false;
+HOLES=false;
 // Size of the hole - radius, in mm.
-HOLE_RADIUS=1;
+HOLE_RADIUS=1; // Smallish - guestimate
 // How many to have down centre of leg of loop - both legs
 // If intending to sew through these, recommend doing two(like button holes.
 HOLES_LOOP_LEG_CENTRAL_NUMBER=4;
@@ -19,9 +19,7 @@ HOLES_LOOP_TOP_CENTRAL_NUMBER=2;
 
 
 hanger(
-    PRINT_HEIGHT,
-    PLA_WIDTH,
-    LOOP_HEIGHT, LOOP_WIDTH,
-    HOOK_TYPE, HOOK_DEPTH, HOOK_HEIGHT,
-    HOLES, HOLE_RADIUS, HOLES_LOOP_LEG_CENTRAL_NUMBER, HOLES_LOOP_TOP_CENTRAL_NUMBER,
-    NOBBLE, NOBBLE_RADIUS, NOBBLE_DISTANCE);
+    loop_height=LOOP_HEIGHT, loop_width=LOOP_WIDTH,
+    hook_type=HOOK_TYPE,
+    holes=HOLES, hole_radius=HOLE_RADIUS, holes_loop_leg_central_number=HOLES_LOOP_LEG_CENTRAL_NUMBER, holes_loop_top_central_number=HOLES_LOOP_TOP_CENTRAL_NUMBER,
+    nobble=NOBBLE);

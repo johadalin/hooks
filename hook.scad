@@ -1,10 +1,14 @@
 // Default config
 $fn=60;// Render 'scale'
 
+
 // Measurements assumed as mm
 
 // Internal measurement: bottom of 'leg' to top of arch (also called the loop).
-LOOP_HEIGHT=67;
+LOOP_HEIGHT=undef;
+module assert_loop_height_set() {
+    assert(!is_undef(LOOP_HEIGHT), str("Please set LOOP_HEIGHT"));
+    }
 // Internal measurement: distance between legs desk is 31
 // Add an extra 1mm for clearance.
 LOOP_WIDTH=30; 
@@ -18,7 +22,12 @@ HOOK_TYPE="none"; //[rounded,square,none]
 // The search should return 0 (postiion in the vector with only HOOK_TYPE in it) 
 // if HOOK_TYPE matches one of the things in the list 
 
-
+module assert_hook_type_set() {
+    hook_type_options =["rounded", "square", "none"];
+    a = search(0,search(hook_type_options, [HOOK_TYPE] ));
+    assert(len(a)==1, str("Please set HOOK_TYPE to one of: ", hook_type_options));
+    }
+    
 // Internal measurement: gap between arch and hook lip. 5 for small hook, 21 for headset
 HOOK_DEPTH=21;//[1:40]
 // Internal measurement: height of hook lip above semi circle. 
@@ -62,13 +71,6 @@ HOLES_LOOP_LEG_CENTRAL_NUMBER=4;
 HOLES_LOOP_TOP_CENTRAL_NUMBER=2;
 
 
-// module assert_hook_type_set() {
-//    hook_type_options =["rounded", "square", "none"];
-//    a = len(search(0,search(hook_type_options, [HOOK_TYPE] )));
-//    echo(a);
-//    if (HOOK_TYPE == undef) echo("Please set HOOK_TYPE to one of: ", hook_type_options);
-//}
-
 hanger(
     PRINT_HEIGHT,
     PLA_WIDTH,
@@ -78,21 +80,25 @@ hanger(
     NOBBLE, NOBBLE_RADIUS, NOBBLE_DISTANCE);
     
 module hanger(
-    print_height,
-    pla_width,
-    loop_height, loop_width,
-    hook_type, hook_depth, hook_height,
-    holes, hole_radius, hole_loop_leg_central_number, holes_loop_top_central_number,
-    nobble, nobble_radius, nobble_distance) {
+    print_height=PRINT_HEIGHT,
+    pla_width= PLA_WIDTH,
+    loop_height=LOOP_HEIGHT, loop_width=LOOP_WIDTH,
+    hook_type=HOOK_TYPE, hook_depth=HOOK_DEPTH, hook_height=HOOK_HEIGHT,
+    holes=HOLES, hole_radius=HOLE_RADIUS, holes_loop_leg_central_number=HOLES_LOOP_LEG_CENTRAL_NUMBER, holes_loop_top_central_number=HOLES_LOOP_TOP_CENTRAL_NUMBER,
+    nobble=NOBBLE, nobble_radius=NOBBLE_RADIUS, nobble_distance=NOBBLE_DISTANCE) {
     
-    //config();
-    //assert_hook_type_set();
+    // These should really be set - the loop height and width, and then 
+    // the toggles for turning the extra options on or off (to notify
+    // the user that these options do exist!)
+    assert_hook_type_set();
+    assert_loop_height_set()
+        
     if (hook_type == "rounded") {
         union(){
             loop(
                 print_height,
                 pla_width, loop_height, loop_width,
-                holes, hole_radius, hole_loop_leg_central_number, holes_loop_top_central_number,
+                holes, hole_radius, holes_loop_leg_central_number, holes_loop_top_central_number,
                 nobble, nobble_radius, nobble_distance
             );
             // Translate the hook so it's on the right hand edge of the loop. 
@@ -108,7 +114,7 @@ module hanger(
             loop(
                 print_height,
                 pla_width, loop_height, loop_width,
-                holes, hole_radius, hole_loop_leg_central_number, holes_loop_top_central_number,
+                holes, hole_radius, holes_loop_leg_central_number, holes_loop_top_central_number,
                 nobble, nobble_radius, nobble_distance
             );
             // Translate the hook so it's on the right hand edge of the loop. 
@@ -122,7 +128,7 @@ module hanger(
         loop(
             print_height,
             pla_width, loop_height, loop_width,
-            holes, hole_radius, hole_loop_leg_central_number, holes_loop_top_central_number,
+            holes, hole_radius, holes_loop_leg_central_number, holes_loop_top_central_number,
             nobble, nobble_radius, nobble_distance
         );
     };
@@ -170,7 +176,7 @@ module square_hook(print_height, pla_width, hook_depth, hook_height){
 module loop(
     print_height,
     pla_width, height, width, 
-    holes, hole_radius, hole_loop_leg_central_number, holes_loop_top_central_number,
+    holes, hole_radius, holes_loop_leg_central_number, holes_loop_top_central_number,
     nobble, nobble_radius, nobble_distance
 ){
     difference(){
@@ -183,7 +189,7 @@ module loop(
             loop_subtractions(
                 print_height,
                 pla_width, height, width,
-                holes, hole_radius, hole_loop_leg_central_number, holes_loop_top_central_number
+                holes, hole_radius, holes_loop_leg_central_number, holes_loop_top_central_number
         );
         }
 
