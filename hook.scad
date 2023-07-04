@@ -6,8 +6,8 @@ $fn=60;// Render 'scale'
 
 // Internal measurement: bottom of 'leg' to top of arch (also called the loop).
 LOOP_HEIGHT=undef;
-module assert_loop_height_set() {
-    assert(!is_undef(LOOP_HEIGHT), str("Please set LOOP_HEIGHT"));
+module assert_loop_height_set(loop_height) {
+    assert(!is_undef(loop_height), str("Please set LOOP_HEIGHT"));
     }
 // Internal measurement: distance between legs desk is 31
 // Add an extra 1mm for clearance.
@@ -18,14 +18,14 @@ LOOP_WIDTH=30;
 ////
 
 // Rounded or square profiled hook
-HOOK_TYPE="none"; //[rounded,square,none]
-// The search should return 0 (postiion in the vector with only HOOK_TYPE in it) 
-// if HOOK_TYPE matches one of the things in the list 
-
-module assert_hook_type_set() {
+HOOK_TYPE=undef; //[rounded,square,none]
+module assert_hook_type_set(hook_type) {
     hook_type_options =["rounded", "square", "none"];
-    a = search(0,search(hook_type_options, [HOOK_TYPE] ));
-    assert(len(a)==1, str("Please set HOOK_TYPE to one of: ", hook_type_options));
+    
+    // The search should return 0 (postiion in the vector with only HOOK_TYPE in it) 
+    // if HOOK_TYPE matches one of the things in the list 
+    a = search(0, search(hook_type_options, [hook_type] ));
+    assert(len(a)==1, str("HOOK_TYPE set to invalid value ", HOOK_TYPE, " Please set HOOK_TYPE to one of: ", hook_type_options));
     }
     
 // Internal measurement: gap between arch and hook lip. 5 for small hook, 21 for headset
@@ -90,8 +90,8 @@ module hanger(
     // These should really be set - the loop height and width, and then 
     // the toggles for turning the extra options on or off (to notify
     // the user that these options do exist!)
-    assert_hook_type_set();
-    assert_loop_height_set()
+    assert_hook_type_set(hook_type);
+    assert_loop_height_set(loop_height);
         
     if (hook_type == "rounded") {
         union(){

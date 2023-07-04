@@ -7,7 +7,7 @@ $fn=60;// Render 'scale'
 LOOP_HEIGHT=30; // Guestimate 30mm as nice
 // Internal measurement: distance between legs desk is 31
 // Add an extra 1mm for clearance.
-LOOP_WIDTH=16; // 15mm measured for top of cupboard width.
+LOOP_WIDTH=19; // 18mm was too small by about a mm on our cupboards.
 
 ////
 // Hook (the bit used to hang things on) options:
